@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Letter of Transmittal Generator</title>
+    <style>
+        #revisionField {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Letter of Transmittal Generator</h1>
+    <form id="transmittalForm">
+        <label for="docType">Document Type:</label>
+        <select id="docType" name="docType" onchange="toggleRevisionField()">
+            <option value="">Select Document Type</option>
+            <option value="CMM">CMM</option>
+            <option value="SB">SB</option>
+            <option value="II">II</option>
+            <option value="ACS Publication">ACS Publication</option>
+        </select><br><br>
+        <label for="docName">Document Name:</label>
+        <input type="text" id="docName" name="docName" required><br><br>
+        <label for="title">Title:</label>
+        <input type="text" id="title" name="title" required><br><br>
+        <label for="date">Date:</label>
+        <input type="date" id="date" name="date" required><br><br>
+        <div id="revisionField">
+            <label for="revision">Revision:</label>
+            <input type="number" id="revision" name="revision"><br><br>
+        </div>
+        <button type="button" onclick="generateAndPrintLetter()">Generate and Print Letter</button>
+    </form>
+    <script>
+        function toggleRevisionField() {
+            const docType = document.getElementById('docType').value;
+            const revisionField = document.getElementById('revisionField');
+            if (docType === 'CMM') {
+                revisionField.style.display = 'block';
+            } else {
+                revisionField.style.display = 'none';
+            }
+        }
+
+        function generateAndPrintLetter() {
+            const docType = document.getElementById('docType').value;
+            const docName = document.getElementById('docName').value;
+            const title = document.getElementById('title').value;
+            const date = document.getElementById('date').value;
+            const revision = document.getElementById('revision').value;
+
+            let letterContent = `
+                <p><strong>Document Type:</strong> ${docType}</p>
+                <p><strong>Document Name:</strong> ${docName}</p>
+                <p><strong>Title:</strong> ${title}</p>
+                <p><strong>Date:</strong> ${date}</p>
+            `;
+
+            if (docType === 'CMM') {
+                letterContent += `<p><strong>Revision:</strong> ${revision}</p>`;
+            }
+
+            letterContent += `
+                <p>Dear [Recipient's Name],</p>
+                <p>Please find attached the document titled "${title}". This document, named "${docName}", is submitted for your review and consideration.</p>
+                <p>Thank you for your attention to this matter.</p>
+                <p>Sincerely,</p>
+                <p>[Your Name]</p>
+            `;
+
+            const newWindow = window.open('', '', 'width=800,height=600');
+            newWindow.document.write('<html><head><title>Letter of Transmittal</title></head><body>');
+            newWindow.document.write(letterContent);
+            newWindow.document.write('</body></html>');
+            newWindow.document.close();
+            newWindow.print();
+        }
+    </script>
+</body>
+</html>
